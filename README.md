@@ -1,66 +1,66 @@
-# Lua Auto Require — IntelliJ / Rider Plugin
+# Lua Auto Require — IntelliJ / Rider 插件
 
-A standalone IntelliJ Platform plugin (works with **Rider**, **IntelliJ IDEA**, and any other IntelliJ-based IDE) that provides automatic `require` statement insertion for Lua files.
+一个独立的 IntelliJ Platform 插件，适用于 **Rider**、**IntelliJ IDEA** 及其他所有基于 IntelliJ 的 IDE。  
+功能：在 Lua 文件中，根据模块名自动匹配并插入 `require` 语句。
 
 ---
 
-## Features
+## 功能特性
 
-| Feature | Description |
+| 功能 | 说明 |
 |---|---|
-| **Module index** | Scans configured source-root directories for `local X = require("...")` patterns and builds a project-level index |
-| **Smart completion** | When you type ≥ 2 chars that match an indexed variable name, the completion popup shows the matching modules with their require path on the right |
-| **Auto-insert** | Selecting a completion item automatically prepends `local <Name> = require("<path>")` at the top of the current file |
-| **Duplicate guard** | If the same `local` declaration already exists, no duplicate is inserted |
-| **Incremental index** | VFS events (create / change / delete) keep the index up-to-date without a full rebuild |
-| **Per-project paths** | Each project can configure its own set of scan directories via the settings panel |
+| **模块索引** | 扫描配置的源码根目录，提取 `local X = require("...")` 模式，构建项目级索引 |
+| **智能补全** | 输入 ≥ 2 个字符时，若与索引中的变量名匹配，补全列表右侧会显示对应的 require 路径 |
+| **自动插入** | 选中补全项后，自动在文件顶部插入 `local <Name> = require("<path>")` |
+| **去重保护** | 若文件中已存在相同的 `local` 声明，不会重复插入 |
+| **增量索引** | 通过监听 VFS 事件（新建/修改/删除），实时更新索引，无需全量重建 |
+| **项目级路径配置** | 每个项目可在设置面板中单独配置扫描目录 |
 
 ---
 
-## Requirements
+## 环境要求
 
-- IntelliJ Platform IDE **2023.3 – 2026.1** (build `233` – `261.*`)
-- A Lua plugin installed in the target IDE that registers the `Lua` language and its file type
+- IntelliJ Platform IDE **2023.3 – 2026.1**（build `233` – `261.*`）
+- 目标 IDE 中已安装支持 `Lua` 语言及文件类型的 Lua 插件
 
 ---
 
-## Usage
+## 使用方法
 
-### 1. Configure scan paths
+### 第一步：配置扫描路径
 
-Open **Settings → Lua Auto Require → Auto Require 路径** and add the root directories that contain your project's Lua files.
+打开 **Settings → Lua Auto Require → Auto Require 路径**，添加项目中存放 Lua 文件的根目录。
 
-> Tip: If you have configured source roots in **Project Structure**, those are also scanned automatically.
+> 提示：在 **Project Structure** 中配置的 Source Root 会被自动包含，无需重复添加。
 
-### 2. Wait for index build
+### 第二步：等待索引构建
 
-On project open (or after saving settings), a background task *"Building require module index…"* runs and fills the index.
+项目打开或保存设置后，后台会自动执行「构建 require 模块索引」任务并显示进度条。
 
-### 3. Use in a Lua file
+### 第三步：在 Lua 文件中使用
 
-Type 2+ characters of a module variable name that appears in the index.  
-The completion popup will show entries tagged **(auto require)** with the full require path.
+输入索引中某个模块变量名的前 2 个以上字符，补全列表中会出现带 **(auto require)** 标记的候选项，右侧显示完整 require 路径。
 
 ```lua
--- Type "UIConf" and pick the completion:
+-- 输入 "UIConf" 后选择补全：
 UIConfig  (auto require)    Game.Mod.Config.UIConfig
--- After selecting, the following line is inserted at the top of the file:
+-- 选中后，文件顶部自动插入：
 local UIConfig = require("Game.Mod.Config.UIConfig")
 ```
 
 ---
 
-## Building
+## 构建
 
 ```bash
 ./gradlew buildPlugin
 ```
 
-The resulting `.zip` file will be in `build/distributions/`. Install it via **Settings → Plugins → ⚙ → Install Plugin from Disk…**.
+构建产物 `.zip` 文件位于 `build/distributions/`，通过 **Settings → Plugins → ⚙ → Install Plugin from Disk…** 安装即可。
 
 ---
 
-## Project structure
+## 项目结构
 
 ```
 LuaAutoRequire/
@@ -70,26 +70,26 @@ LuaAutoRequire/
 └── src/main/
     ├── kotlin/com/tang/intellij/lua/autorequire/
     │   ├── completion/
-    │   │   ├── RequireModuleInfo.kt                 # Data class: varName + requirePath + sourceFile
-    │   │   ├── RequireModuleIndex.kt                # Project service: builds & maintains the index
-    │   │   ├── RequireModuleIndexStartupActivity.kt # Kicks off warm-up on project open
-    │   │   └── AutoRequireCompletionContributor.kt  # CompletionContributor + InsertHandler
+    │   │   ├── RequireModuleInfo.kt                 # 数据类：varName + requirePath + sourceFile
+    │   │   ├── RequireModuleIndex.kt                # 项目级服务：构建并维护索引
+    │   │   ├── RequireModuleIndexStartupActivity.kt # 项目打开后触发预热
+    │   │   └── AutoRequireCompletionContributor.kt  # 补全贡献者 + 插入处理器
     │   └── project/
-    │       ├── AutoRequireSourceRootManager.kt      # Persists configured scan paths
-    │       └── AutoRequireSettingsPanel.kt          # Settings UI panel
+    │       ├── AutoRequireSourceRootManager.kt      # 持久化扫描路径配置
+    │       └── AutoRequireSettingsPanel.kt          # 设置面板 UI
     └── resources/META-INF/
         └── plugin.xml
 ```
 
 ---
 
-## Configuration file
+## 配置文件
 
-The configured scan paths are stored in `.idea/lua-auto-require.xml` (project-scoped).  
-Add it to `.gitignore` if the paths are machine-specific.
+扫描路径配置存储在 `.idea/lua-auto-require.xml`（项目级，不跨项目共享）。  
+若路径为本机绝对路径，建议将该文件加入 `.gitignore`。
 
 ---
 
-## License
+## 许可证
 
 Apache 2.0
