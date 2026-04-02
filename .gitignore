@@ -1,0 +1,18 @@
+# Default ignored directories
+.gradle/
+build/
+out/
+
+# IntelliJ IDEA artifacts
+*.iml
+*.iws
+*.ipr
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Signing keys / publish tokens
+*.p12
+*.pem

@@ -1,0 +1,58 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>com.tang.intellij.lua.autorequire</id>
+    <name>Lua Auto Require</name>
+    <vendor email="842017703@qq.com" url="https://github.com/zhangchenglei2/IntelliJ-EmmyLua">EmmyLua</vendor>
+
+    <description><![CDATA[
+        <h2>Lua Auto Require</h2>
+        <p>
+            Automatically suggests and inserts <code>require</code> statements by matching
+            module names across your project's Lua source roots.
+        </p>
+        <h3>Features</h3>
+        <ul>
+            <li>Indexes all <code>local X = require("...")</code> statements in your Lua source roots</li>
+            <li>When you type a variable name (≥2 chars) that exists in the index, auto-complete shows it with its require path</li>
+            <li>Selecting a completion automatically inserts <code>local X = require("...")</code> at the top of the file</li>
+            <li>Incremental index: watches for file create/change/delete events and updates index instantly</li>
+            <li>Per-project configurable search paths: Settings → EmmyLua → Auto Require 路径</li>
+        </ul>
+        <h3>Usage</h3>
+        <ol>
+            <li>Configure source paths in <b>Settings → EmmyLua → Auto Require 路径</b></li>
+            <li>Start typing a module variable name in any Lua file</li>
+            <li>Select the completion entry marked <i>(auto require)</i></li>
+            <li>The <code>local</code> statement is inserted at the file top automatically</li>
+        </ol>
+        <p>Requires <b>EmmyLua</b> (or compatible Lua plugin) to be installed.</p>
+    ]]></description>
+
+    <!-- Require EmmyLua plugin -->
+    <depends>com.intellij.modules.platform</depends>
+    <!-- Uncomment the line below if EmmyLua is installed as a separate plugin in your IDE -->
+    <!-- <depends>com.tang.intellij.lua</depends> -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Project-level service: the require module index -->
+        <projectService serviceImplementation="com.tang.intellij.lua.autorequire.completion.RequireModuleIndex"/>
+
+        <!-- Startup activity: warm up the index on project open -->
+        <postStartupActivity implementation="com.tang.intellij.lua.autorequire.completion.RequireModuleIndexStartupActivity"/>
+
+        <!-- Completion contributor for Lua files -->
+        <completion.contributor language="Lua"
+                                implementationClass="com.tang.intellij.lua.autorequire.completion.AutoRequireCompletionContributor"
+                                order="last"/>
+
+        <!-- Project-level settings panel under EmmyLua -->
+        <projectConfigurable parentId="preferences.Lua"
+                             displayName="Auto Require 路径"
+                             id="preferences.Lua.AutoRequire"
+                             instance="com.tang.intellij.lua.autorequire.project.AutoRequireSettingsPanel"
+                             nonDefaultProject="false"/>
+
+        <!-- Persist auto-require source roots in emmy.xml -->
+        <projectService serviceImplementation="com.tang.intellij.lua.autorequire.project.AutoRequireSourceRootManager"/>
+    </extensions>
+</idea-plugin>
