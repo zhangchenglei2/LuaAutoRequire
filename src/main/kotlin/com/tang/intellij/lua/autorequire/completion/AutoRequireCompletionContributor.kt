@@ -141,8 +141,10 @@ class AutoRequireCompletionContributor : CompletionContributor() {
 // ---------------------------------------------------------------------------
 
 /**
- * Inserts `local <varName> = require("<requirePath>")\n` at offset 0 (file top)
- * unless the same local declaration already exists in the document.
+ * Inserts `local <varName> = require("<requirePath>")\n` before the first existing
+ * `require` statement in the file. If no `require` statement is found, inserts at
+ * offset 0 (file top).
+ * Skips insertion if the same local declaration already exists in the document.
  */
 class AutoRequireInsertHandler(private val info: RequireModuleInfo) : InsertHandler<LookupElement> {
 
@@ -153,10 +155,23 @@ class AutoRequireInsertHandler(private val info: RequireModuleInfo) : InsertHand
         WriteCommandAction.runWriteCommandAction(file.project, "Insert require statement", null, {
             val docText = document.charsSequence.toString()
             if (!isAlreadyRequired(info.varName, docText)) {
+                val insertOffset = findFirstRequireOffset(docText, document)
                 val requireStatement = buildRequireStatement()
-                document.insertString(0, requireStatement)
+                document.insertString(insertOffset, requireStatement)
             }
         }, file)
+    }
+
+    /**
+     * 找到文件中第一条 require 语句所在行的行首偏移量。
+     * 如果文件中没有任何 require 语句，则返回 0（文件头）。
+     */
+    private fun findFirstRequireOffset(docText: String, document: Document): Int {
+        val requirePattern = Regex("""^[^\n]*require\s*[(\s]["']""", RegexOption.MULTILINE)
+        val match = requirePattern.find(docText) ?: return 0
+        // 返回该匹配所在行的行首偏移
+        val matchLine = document.getLineNumber(match.range.first)
+        return document.getLineStartOffset(matchLine)
     }
 
     private fun buildRequireStatement(): String =
