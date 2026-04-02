@@ -2,8 +2,6 @@
 
 A standalone IntelliJ Platform plugin (works with **Rider**, **IntelliJ IDEA**, and any other IntelliJ-based IDE) that provides automatic `require` statement insertion for Lua files.
 
-Extracted from [EmmyLua](https://github.com/zhangchenglei2/IntelliJ-EmmyLua) (commits `c9b4f27`, `c9c8e02`, `82c229b`, `ae21247`).
-
 ---
 
 ## Features
@@ -22,7 +20,7 @@ Extracted from [EmmyLua](https://github.com/zhangchenglei2/IntelliJ-EmmyLua) (co
 ## Requirements
 
 - IntelliJ Platform IDE **2023.3 – 2025.1** (build `233` – `251.*`)
-- **EmmyLua** plugin (or equivalent Lua plugin) installed — this plugin registers the `Lua` language and its file type
+- A Lua plugin installed in the target IDE that registers the `Lua` language and its file type
 
 ---
 
@@ -30,13 +28,13 @@ Extracted from [EmmyLua](https://github.com/zhangchenglei2/IntelliJ-EmmyLua) (co
 
 ### 1. Configure scan paths
 
-Open **Settings → EmmyLua → Auto Require 路径** and add the root directories that contain your project's Lua files.
+Open **Settings → Lua Auto Require → Auto Require 路径** and add the root directories that contain your project's Lua files.
 
 > Tip: If you have configured source roots in **Project Structure**, those are also scanned automatically.
 
 ### 2. Wait for index build
 
-On project open (or after saving settings), a background task *"EmmyLua: Building require module index…"* runs and fills the index.
+On project open (or after saving settings), a background task *"Building require module index…"* runs and fills the index.
 
 ### 3. Use in a Lua file
 
@@ -65,7 +63,7 @@ The resulting `.zip` file will be in `build/distributions/`. Install it via **Se
 ## Project structure
 
 ```
-lua-auto-require-plugin/
+LuaAutoRequire/
 ├── build.gradle.kts
 ├── settings.gradle.kts
 ├── README.md
@@ -94,4 +92,4 @@ Add it to `.gitignore` if the paths are machine-specific.
 
 ## License
 
-Apache 2.0 — same as the original EmmyLua project.
+Apache 2.0
