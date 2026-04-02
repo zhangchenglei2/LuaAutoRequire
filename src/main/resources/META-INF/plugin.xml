@@ -2,7 +2,7 @@
 <idea-plugin>
     <id>com.tang.intellij.lua.autorequire</id>
     <name>Lua Auto Require</name>
-    <vendor email="842017703@qq.com" url="https://github.com/zhangchenglei2/IntelliJ-EmmyLua">EmmyLua</vendor>
+    <vendor email="adce@qq.com" url="https://github.com/zhangchenglei2/LuaAutoRequire">zhangchenglei2</vendor>
 
     <description><![CDATA[
         <h2>Lua Auto Require</h2>
