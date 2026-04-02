@@ -27,6 +27,7 @@ import com.intellij.codeInsight.completion.PrioritizedLookupElement
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Document
 import com.intellij.patterns.PlatformPatterns
@@ -125,9 +126,9 @@ class AutoRequireCompletionContributor : CompletionContributor() {
      */
     private fun buildLookupElement(info: RequireModuleInfo): LookupElement {
         return LookupElementBuilder
-            .create(info, "🐧 ${info.varName}")
-            .withLookupString(info.varName)
+            .create(info, info.varName)
             .withLookupString(info.requirePath)
+            .withIcon(IconLoader.getIcon("/icons/penguin.svg", AutoRequireCompletionContributor::class.java))
             .withTypeText(info.requirePath, true)
             .withTailText("  (auto require)", true)
             .withBoldness(true)
