@@ -46,7 +46,7 @@ class AutoRequireSettingsPanel(private val project: Project) : Configurable {
     private val pathList = JBList(dataModel)
     private lateinit var rootPanel: JPanel
 
-    override fun getDisplayName(): String = "Auto Require 路径"
+    override fun getDisplayName(): String = "Lua Auto Require"
 
     override fun createComponent(): JComponent {
         pathList.selectionMode = ListSelectionModel.SINGLE_SELECTION

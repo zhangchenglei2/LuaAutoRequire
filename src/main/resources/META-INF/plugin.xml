@@ -16,11 +16,11 @@
             <li>When you type a variable name (≥2 chars) that exists in the index, auto-complete shows it with its require path</li>
             <li>Selecting a completion automatically inserts <code>local X = require("...")</code> at the top of the file</li>
             <li>Incremental index: watches for file create/change/delete events and updates index instantly</li>
-            <li>Per-project configurable search paths: Settings → EmmyLua → Auto Require 路径</li>
+            <li>Per-project configurable search paths: Settings → Lua Auto Require</li>
         </ul>
         <h3>Usage</h3>
         <ol>
-            <li>Configure source paths in <b>Settings → EmmyLua → Auto Require 路径</b></li>
+            <li>Configure source paths in <b>Settings → Lua Auto Require</b></li>
             <li>Start typing a module variable name in any Lua file</li>
             <li>Select the completion entry marked <i>(auto require)</i></li>
             <li>The <code>local</code> statement is inserted at the file top automatically</li>
@@ -45,10 +45,9 @@
                                 implementationClass="com.tang.intellij.lua.autorequire.completion.AutoRequireCompletionContributor"
                                 order="last"/>
 
-        <!-- Project-level settings panel under EmmyLua -->
-        <projectConfigurable parentId="preferences.Lua"
-                             displayName="Auto Require 路径"
-                             id="preferences.Lua.AutoRequire"
+        <!-- Project-level settings panel (standalone) -->
+        <projectConfigurable displayName="Lua Auto Require"
+                             id="preferences.LuaAutoRequire"
                              instance="com.tang.intellij.lua.autorequire.project.AutoRequireSettingsPanel"
                              nonDefaultProject="false"/>
 

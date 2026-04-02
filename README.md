@@ -20,7 +20,7 @@
 
 ## 环境要求
 
-- IntelliJ Platform IDE **2023.3 – 2026.1**（build `233` – `261.*`）
+- IntelliJ Platform IDE **2025.1 – 2026.1**（build `251` – `261.*`）
 - 目标 IDE 中已安装支持 `Lua` 语言及文件类型的 Lua 插件
 
 ---
@@ -29,7 +29,7 @@
 
 ### 第一步：配置扫描路径
 
-打开 **Settings → Lua Auto Require → Auto Require 路径**，添加项目中存放 Lua 文件的根目录。
+打开 **Settings → Lua Auto Require**，添加项目中存放 Lua 文件的根目录。
 
 > 提示：在 **Project Structure** 中配置的 Source Root 会被自动包含，无需重复添加。
 

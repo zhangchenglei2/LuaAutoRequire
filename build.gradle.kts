@@ -1,9 +1,9 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.9.25"
-    id("org.jetbrains.intellij") version "1.17.4"
+    id("org.jetbrains.kotlin.jvm") version "2.3.0"
+    id("org.jetbrains.intellij.platform") version "2.5.0"
 }
 
 group = "com.tang.intellij.lua"
@@ -11,21 +11,25 @@ version = "1.0.0"
 
 repositories {
     mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
-// Configure Gradle IntelliJ Plugin
-// Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    version.set("2026.1")
-    type.set("RD") // Target IDE: Rider
-    // Also compatible with IC (IntelliJ Community), IU (IntelliJ Ultimate), etc.
-    // Change to "IC" if you want to test with IntelliJ IDEA Community
+dependencies {
+    intellijPlatform {
+        rider("2026.1")
+        instrumentationTools()
+    }
+}
 
-    plugins.set(listOf(
-        // EmmyLua plugin - required for Lua PSI types
-        // Note: When building as standalone, you need EmmyLua installed in the target IDE
-        // or declare it as a plugin dependency below
-    ))
+intellijPlatform {
+    pluginConfiguration {
+        ideaVersion {
+            sinceBuild = "251"
+            untilBuild = "261.*"
+        }
+    }
 }
 
 tasks {
@@ -33,13 +37,13 @@ tasks {
         sourceCompatibility = "17"
         targetCompatibility = "17"
     }
-    withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
+    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 
-    patchPluginXml {
-        sinceBuild.set("233")
-        untilBuild.set("261.*")
+    // Rider 插件不需要 buildSearchableOptions，禁用以避免构建失败
+    named("buildSearchableOptions") {
+        enabled = false
     }
 
     signPlugin {

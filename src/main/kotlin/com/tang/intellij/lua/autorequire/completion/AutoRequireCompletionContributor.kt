@@ -128,7 +128,8 @@ class AutoRequireCompletionContributor : CompletionContributor() {
             .create(info, info.varName)
             .withLookupString(info.requirePath)
             .withTypeText(info.requirePath, true)
-            .withTailText("  (auto require)", true)
+            .withTailText("  ⚡ auto require", true)
+            .withBoldness(true)
             .withInsertHandler(AutoRequireInsertHandler(info))
     }
 }
