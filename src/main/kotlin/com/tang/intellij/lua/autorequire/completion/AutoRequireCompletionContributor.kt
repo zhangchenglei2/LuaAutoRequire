@@ -125,10 +125,11 @@ class AutoRequireCompletionContributor : CompletionContributor() {
      */
     private fun buildLookupElement(info: RequireModuleInfo): LookupElement {
         return LookupElementBuilder
-            .create(info, info.varName)
+            .create(info, "🐧 ${info.varName}")
+            .withLookupString(info.varName)
             .withLookupString(info.requirePath)
             .withTypeText(info.requirePath, true)
-            .withTailText("  ⚡ auto require", true)
+            .withTailText("  (auto require)", true)
             .withBoldness(true)
             .withInsertHandler(AutoRequireInsertHandler(info))
     }
