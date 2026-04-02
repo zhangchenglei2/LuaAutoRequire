@@ -16,7 +16,7 @@ repositories {
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
-    version.set("2023.3.7")
+    version.set("2026.1")
     type.set("RD") // Target IDE: Rider
     // Also compatible with IC (IntelliJ Community), IU (IntelliJ Ultimate), etc.
     // Change to "IC" if you want to test with IntelliJ IDEA Community
@@ -39,7 +39,7 @@ tasks {
 
     patchPluginXml {
         sinceBuild.set("233")
-        untilBuild.set("251.*")
+        untilBuild.set("261.*")
     }
 
     signPlugin {

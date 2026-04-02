@@ -19,7 +19,7 @@ A standalone IntelliJ Platform plugin (works with **Rider**, **IntelliJ IDEA**, 
 
 ## Requirements
 
-- IntelliJ Platform IDE **2023.3 – 2025.1** (build `233` – `251.*`)
+- IntelliJ Platform IDE **2023.3 – 2026.1** (build `233` – `261.*`)
 - A Lua plugin installed in the target IDE that registers the `Lua` language and its file type
 
 ---
