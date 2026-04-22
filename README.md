@@ -1,7 +1,7 @@
 # Lua Auto Require — IntelliJ / Rider 插件
 
 一个独立的 IntelliJ Platform 插件，适用于 **Rider**、**IntelliJ IDEA** 及其他所有基于 IntelliJ 的 IDE。  
-功能：在 Lua 文件中，根据模块名自动匹配并插入 `require` 语句。
+功能：在 Lua 文件中，根据模块名自动匹配并插入 `require` 语句，同时提供模块路径复制等辅助功能。
 
 ---
 
@@ -15,6 +15,7 @@
 | **去重保护** | 若文件中已存在相同的 `local` 声明，不会重复插入 |
 | **增量索引** | 通过监听 VFS 事件（新建/修改/删除），实时更新索引，无需全量重建 |
 | **项目级路径配置** | 每个项目可在设置面板中单独配置扫描目录 |
+| **复制Lua模块路径** | 右键菜单一键复制文件的点分隔模块路径，自动识别 Git 仓库根目录 |
 
 ---
 
@@ -27,17 +28,19 @@
 
 ## 使用方法
 
-### 第一步：配置扫描路径
+### 一、Auto Require 自动补全
+
+#### 第一步：配置扫描路径
 
 打开 **Settings → Lua Auto Require**，添加项目中存放 Lua 文件的根目录。
 
 > 提示：在 **Project Structure** 中配置的 Source Root 会被自动包含，无需重复添加。
 
-### 第二步：等待索引构建
+#### 第二步：等待索引构建
 
 项目打开或保存设置后，后台会自动执行「构建 require 模块索引」任务并显示进度条。
 
-### 第三步：在 Lua 文件中使用
+#### 第三步：在 Lua 文件中使用
 
 输入索引中某个模块变量名的前 2 个以上字符，补全列表中会出现带 **(auto require)** 标记的候选项，右侧显示完整 require 路径。
 
@@ -47,6 +50,27 @@ UIConfig  (auto require)    Game.Mod.Config.UIConfig
 -- 选中后，文件顶部自动插入：
 local UIConfig = require("Game.Mod.Config.UIConfig")
 ```
+
+---
+
+### 二、复制 Lua 模块路径
+
+在项目树或编辑器中右键点击任意 `.lua` 文件，选择 **复制路径/引用… → 复制Lua模块路径**，即可将该文件的点分隔模块路径复制到剪贴板。
+
+**路径转换规则：**
+
+1. 以 **Git 仓库根目录**为基准计算相对路径（若文件不在 Git 仓库内，则回退到项目根目录）
+2. 将路径分隔符 `/` 替换为 `.`
+3. 移除 `.lua` 文件扩展名
+
+**示例：**
+
+| 文件路径 | 复制结果 |
+|---|---|
+| `src/lua/Test.lua` | `src.lua.Test` |
+| `Game/Mod/Config/UIConfig.lua` | `Game.Mod.Config.UIConfig` |
+
+> 菜单项位于右键菜单的 **复制路径/引用…** 子菜单中，与"绝对路径"、"仓库根路径"等选项并列，悬停时右侧预览面板会实时显示转换后的模块路径。
 
 ---
 
@@ -69,6 +93,8 @@ LuaAutoRequire/
 ├── README.md
 └── src/main/
     ├── kotlin/com/tang/intellij/lua/autorequire/
+    │   ├── action/
+    │   │   └── CopyLuaModulePathAction.kt           # 复制Lua模块路径右键菜单 Action
     │   ├── completion/
     │   │   ├── RequireModuleInfo.kt                 # 数据类：varName + requirePath + sourceFile
     │   │   ├── RequireModuleIndex.kt                # 项目级服务：构建并维护索引

@@ -54,4 +54,15 @@
         <!-- Persist auto-require source roots in emmy.xml -->
         <projectService serviceImplementation="com.tang.intellij.lua.autorequire.project.AutoRequireSourceRootManager"/>
     </extensions>
+
+    <actions>
+        <!-- 复制 Lua 文件的模块路径（点分隔格式），继承 DumbAwareCopyPathProvider 以获得右侧预览面板 -->
+        <action id="LuaAutoRequire.CopyModulePath"
+                class="com.tang.intellij.lua.autorequire.action.CopyLuaModulePathAction"
+                text="复制Lua模块路径"
+                description="将 Lua 文件路径转换为点分隔的模块路径并复制到剪贴板（如 src.lua.Test）">
+            <!-- 加入"复制路径/引用"弹出子菜单，与"绝对路径"、"仓库根路径"等并列，支持右侧预览面板 -->
+            <add-to-group group-id="CopyReferencePopupGroup" anchor="last"/>
+        </action>
+    </actions>
 </idea-plugin>
